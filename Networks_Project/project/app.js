@@ -68,7 +68,7 @@ app.get('/inca', function(req, res) {
   var collection = db.collection('Users');  // get reference to the collection
   collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
   {     
-    if(place in docs.wanttogo) //if exists
+    if(docs[0].wanttogo.includes(place)) //if exists
     {
       res.render('inca' , {message: true});
     }
@@ -80,28 +80,95 @@ app.get('/inca', function(req, res) {
 });
 
 app.get('/annapurna', function(req, res) {
-  res.render('annapurna')
+  var username = req.session.username;
+  var place = "Annapurna";
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(docs[0].wanttogo.includes(place)) //if exists
+    {
+      res.render('annapurna' , {message: true});
+    }
+    else // if it does not 
+    { 
+      res.render('annapurna' , {message: false});
+    }
+  });
 });
 
 
 // Cities page buttons
 
 app.get('/paris', function(req, res) {
-  res.render('paris')
+  var username = req.session.username;
+  var place = "Paris";
+  var collection = db.collection('Users');  // get reference to the collection
+
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {  
+    console.log(docs[0].wanttogo);   
+    if(docs[0].wanttogo.includes(place)) //if exists
+    {
+      res.render('paris' , {message: true});
+    }
+    else // if it does not 
+    { 
+      res.render('paris' , {message: false});
+    }
+  });
 });
 
 app.get('/rome', function(req, res) {
-  res.render('rome')
+  var username = req.session.username;
+  var place = "Rome";
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(docs[0].wanttogo.includes(place)) //if exists
+    {
+      res.render('rome' , {message: true});
+    }
+    else // if it does not 
+    { 
+      res.render('rome' , {message: false});
+    }
+  });
 });
 
 // Islands page buttons
 
 app.get('/bali', function(req, res) {
-  res.render('bali')
+  var username = req.session.username;
+  var place = "Bali";
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(docs[0].wanttogo.includes(place)) //if exists
+    {
+      res.render('bali' , {message: true});
+    }
+    else // if it does not 
+    { 
+      res.render('bali' , {message: false});
+    }
+  });
 });
 
 app.get('/santorini', function(req, res) {
-  res.render('santorini')
+  var username = req.session.username;
+  var place = "Santorini";
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(docs[0].wanttogo.includes(place)) //if exists
+    {
+      res.render('santorini' , {message: true});
+    }
+    else // if it does not 
+    { 
+      res.render('santorini' , {message: false});
+    }
+  });
 });
 
 

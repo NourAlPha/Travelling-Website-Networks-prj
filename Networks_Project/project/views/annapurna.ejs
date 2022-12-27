@@ -101,9 +101,15 @@
     <div class="wanttogo">
       <form method="POST" action="/wanttogolist">
         <input type="hidden" name="place" value="Annapurna" />
+        <% if(locals.message){ %>
+        <button id="wanttogo" class="btn btn-secondary ml-3" disabled>
+          Add to Want-to-Go List
+        </button>
+        <% } else { %>
         <button id="wanttogo" class="btn btn-secondary ml-3">
           Add to Want-to-Go List
         </button>
+        <% } %>
       </form>
     </div>
     </div>
