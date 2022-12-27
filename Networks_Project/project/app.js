@@ -1,9 +1,10 @@
 var express = require('express');
 var path = require('path');
 var fs = require('fs');
-const { Db } = require('mongodb');
-const { render } = require('ejs');
+//const { Db } = require('mongodb');
+//const { render } = require('ejs');
 var app = express();
+var session = require('express-session');
 
 
 
@@ -14,6 +15,16 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({ secret: 'ssshhhhh!', saveUninitialized: true, resave: true }));
+
+// DB Connection
+var MongoClient = require('mongodb').MongoClient;
+var db = null;
+
+MongoClient.connect("mongodb://0.0.0.0:27017", { useNewUrlParser: true }, function(err, client)  {
+  if(err) throw err;
+  db = client.db('ProjectDB');
+});
 
 
 // login page
@@ -52,7 +63,20 @@ app.get('/wanttogo', function(req, res) {
 // Hiking page buttons
 
 app.get('/inca', function(req, res) {
-  res.render('inca')
+  var username = req.session.username;
+  var place = "Inca Trail";
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(place in docs.wanttogo) //if exists
+    {
+      res.render('inca' , {message: true});
+    }
+    else // if it does not 
+    { 
+      res.render('inca' , {message: false});
+    }
+  });
 });
 
 app.get('/annapurna', function(req, res) {
@@ -81,13 +105,6 @@ app.get('/santorini', function(req, res) {
 });
 
 
-var MongoClient = require('mongodb').MongoClient;
-var db = null;
-
-MongoClient.connect("mongodb://0.0.0.0:27017", { useNewUrlParser: true }, function(err, client)  {
-  if(err) throw err;
-  db = client.db('ProjectDB');
-});
 
 
 // login POST 
@@ -100,11 +117,12 @@ app.post('/login', function(req, res) {
   {     
     if(docs.length > 0) //if exists
     {
+      req.session.username = username;
       res.render('home');
     }
     else // if it does not 
     { 
-      res.render('login');
+      res.render('login', {message: "Wrong Credentials"});
     }
   });
   
@@ -115,24 +133,40 @@ app.post('/login', function(req, res) {
 app.post('/register', function(req, res) {
   var username = req.body.username;
   var password = req.body.password;
+  var wanttogo = [];
   var collection = db.collection('Users');  // get reference to the collection
   collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
   {     
     if(docs.length > 0) //if exists
     {
-      res.render('registration');
+      res.render('registration' , {message: "Username already exists"});
      
     }
     else // if it does not 
     {
-      db.collection('Users').insertOne({username : username, password : password}), function(err, result) {
+      db.collection('Users').insertOne({username : username, password : password , wanttogo : wanttogo}), function(err, result) {
       }
-      console.log("1 document inserted");
-      
+      req.session.username = username;
       res.render('home');
     }
   });
   
+});
+
+// want to go
+
+app.post('/wanttogolist', function(req, res) {
+  var username = req.session.username;
+  console.log(username);
+  var place = req.body.place;
+  var collection = db.collection('Users');  // get reference to the collection
+
+  db.collection("Users").updateOne({username: {$eq: username}}, {
+    $push: {
+        wanttogo: place
+     }
+ });
+  res.render('home');
 });
   
 

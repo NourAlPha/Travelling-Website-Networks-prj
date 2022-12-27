@@ -97,9 +97,12 @@
       panoramic views, and the majesty of its magnificent villas.
     </div>
     <div class="wanttogo">
-      <button id="wanttogo" class="btn btn-secondary ml-3">
-        Add to Want-to-Go List
-      </button>
+      <form method="POST" action="/wanttogolist">
+        <input type="hidden" name="place" value="Rome" />
+        <button id="wanttogo" class="btn btn-secondary ml-3">
+          Add to Want-to-Go List
+        </button>
+      </form>
     </div>
     <div class="video">
       <iframe

@@ -99,9 +99,12 @@
       island of Santorini became so popular as a holiday destination.
     </div>
     <div class="wanttogo">
-      <button id="wanttogo" class="btn btn-secondary ml-3">
-        Add to Want-to-Go List
-      </button>
+      <form method="POST" action="/wanttogolist">
+        <input type="hidden" name="place" value="Santorini" />
+        <button id="wanttogo" class="btn btn-secondary ml-3">
+          Add to Want-to-Go List
+        </button>
+      </form>
     </div>
     <div class="video">
       <iframe

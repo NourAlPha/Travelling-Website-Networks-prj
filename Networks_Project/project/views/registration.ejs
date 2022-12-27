@@ -31,7 +31,11 @@
       crossorigin="anonymous"
     />
   </head>
-
+  <% if(locals.message){ %>
+  <script>
+    window.alert("Username Already Exists");
+  </script>
+  <% } %>
   <body>
     <div class="container">
       <h1>Registration</h1>

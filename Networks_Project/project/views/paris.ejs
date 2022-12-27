@@ -98,9 +98,12 @@
       over two million people and is one of Europe's most-visited cities.
     </div>
     <div class="wanttogo">
-      <button id="wanttogo" class="btn btn-secondary ml-3">
-        Add to Want-to-Go List
-      </button>
+      <form method="POST" action="/wanttogolist">
+        <input type="hidden" name="place" value="Paris" />
+        <button id="wanttogo" class="btn btn-secondary ml-3">
+          Add to Want-to-Go List
+        </button>
+      </form>
     </div>
     <div class="video">
       <iframe

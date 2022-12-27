@@ -30,7 +30,11 @@
       crossorigin="anonymous"
     />
   </head>
-
+  <% if(locals.message){ %>
+  <script>
+    window.alert("Wrong Credentials");
+  </script>
+  <% } %>
   <body>
     <div class="container">
       <h1>Welcome</h1>
