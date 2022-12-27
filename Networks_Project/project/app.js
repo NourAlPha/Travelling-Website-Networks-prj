@@ -1,6 +1,8 @@
 var express = require('express');
 var path = require('path');
 var fs = require('fs');
+const { Db } = require('mongodb');
+const { render } = require('ejs');
 var app = express();
 
 
@@ -80,13 +82,59 @@ app.get('/santorini', function(req, res) {
 
 
 var MongoClient = require('mongodb').MongoClient;
+var db = null;
 
-MongoClient.connect("mongodb://localhost:27017", function (err, client) {
+MongoClient.connect("mongodb://0.0.0.0:27017", { useNewUrlParser: true }, function(err, client)  {
   if(err) throw err;
-  var db = client.db('ProjectDB');
-  //var collection = db.collection('FirstCollection');
-  db.collection('FirstCollection').insertOne( { id: 1, name: Omar } );  
+  db = client.db('ProjectDB');
 });
+
+
+// login POST 
+
+app.post('/login', function(req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username , password: password}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(docs.length > 0) //if exists
+    {
+      res.render('home');
+    }
+    else // if it does not 
+    { 
+      res.render('login');
+    }
+  });
+  
+});
+
+// registration
+
+app.post('/register', function(req, res) {
+  var username = req.body.username;
+  var password = req.body.password;
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
+  {     
+    if(docs.length > 0) //if exists
+    {
+      res.render('registration');
+     
+    }
+    else // if it does not 
+    {
+      db.collection('Users').insertOne({username : username, password : password}), function(err, result) {
+      }
+      console.log("1 document inserted");
+      
+      res.render('home');
+    }
+  });
+  
+});
+  
 
 
 
