@@ -32,7 +32,7 @@
   </head>
   <% if(locals.message){ %>
   <script>
-    window.alert("Wrong Credentials");
+    window.alert("<%= locals.message %>");
   </script>
   <% } %>
   <body>

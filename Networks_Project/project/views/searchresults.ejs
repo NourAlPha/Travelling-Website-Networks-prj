@@ -38,5 +38,27 @@
             </form>
         </div>
     </nav>
+    <% if(locals.result.length != 0){ %>
+    <div class="container">
+        <h1>Search Results</h1>
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i = 0; i < locals.result.length; i++){ %>
+                <tr>
+                    <td> <a href="<%=locals.result[i].toLowerCase()%>"><%= locals.result[i] %></a></td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
+        </div>
+        <% } else { %>
+        <div class="container">
+            <h1>No results found</h1>
+        <% } %>
 </body>
 </html>

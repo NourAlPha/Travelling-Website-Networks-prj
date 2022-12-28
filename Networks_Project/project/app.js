@@ -38,33 +38,54 @@ app.get('/registration', function(req, res) {
 });
 
 app.get('/home', function(req, res) {
-  res.render('home')
+  if(req.session.username)
+    res.render('home')
+  else
+     res.render('login' , {message: "Please login first"})  
 });
 
 
 // Home page buttons
 
 app.get('/hiking', function(req, res) {
-  res.render('hiking')
+  if(req.session.username)
+    res.render('hiking')
+  else
+     res.render('login' , {message: "Please login first"}) 
 });
 
 app.get('/cities', function(req, res) {
-  res.render('cities')
+  if(req.session.username)
+    res.render('cities')
+  else
+     res.render('login' , {message: "Please login first"}) 
 });
 
 app.get('/islands', function(req, res) {
-  res.render('islands')
+  if(req.session.username)
+    res.render('islands')
+  else
+     res.render('login' , {message: "Please login first"}) 
 });
 
 app.get('/wanttogo', function(req, res) {
-  res.render('wanttogo')
+  if(req.session.username) {
+  var username = req.session.username;
+  var collection = db.collection('Users');  // get reference to the collection
+  collection.find({username: username}, {$exists: true}).toArray(function(err, docs){
+    res.render('wanttogo' , {places: docs[0].wanttogo})
+  });
+  }
+  else
+      res.render('login' , {message: "Please login first"})
 });
 
 // Hiking page buttons
 
 app.get('/inca', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
-  var place = "Inca Trail";
+  var place = "Inca";
   var collection = db.collection('Users');  // get reference to the collection
   collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
   {     
@@ -77,9 +98,13 @@ app.get('/inca', function(req, res) {
       res.render('inca' , {message: false});
     }
   });
+  }
+  else  
+    res.render('login' , {message: "Please login first"})
 });
 
 app.get('/annapurna', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
   var place = "Annapurna";
   var collection = db.collection('Users');  // get reference to the collection
@@ -94,19 +119,22 @@ app.get('/annapurna', function(req, res) {
       res.render('annapurna' , {message: false});
     }
   });
+  }
+  else
+    res.render('login' , {message: "Please login first"})
 });
 
 
 // Cities page buttons
 
 app.get('/paris', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
   var place = "Paris";
   var collection = db.collection('Users');  // get reference to the collection
 
   collection.find({username: username}, {$exists: true}).toArray(function(err, docs) //find if documents that satisfy the criteria exist
-  {  
-    console.log(docs[0].wanttogo);   
+  {   
     if(docs[0].wanttogo.includes(place)) //if exists
     {
       res.render('paris' , {message: true});
@@ -116,9 +144,13 @@ app.get('/paris', function(req, res) {
       res.render('paris' , {message: false});
     }
   });
+  }
+  else
+    res.render('login' , {message: "Please login first"})
 });
 
 app.get('/rome', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
   var place = "Rome";
   var collection = db.collection('Users');  // get reference to the collection
@@ -133,11 +165,15 @@ app.get('/rome', function(req, res) {
       res.render('rome' , {message: false});
     }
   });
+  }
+  else  
+    res.render('login' , {message: "Please login first"})
 });
 
 // Islands page buttons
 
 app.get('/bali', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
   var place = "Bali";
   var collection = db.collection('Users');  // get reference to the collection
@@ -152,9 +188,13 @@ app.get('/bali', function(req, res) {
       res.render('bali' , {message: false});
     }
   });
+  }
+  else
+    res.render('login' , {message: "Please login first"})
 });
 
 app.get('/santorini', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
   var place = "Santorini";
   var collection = db.collection('Users');  // get reference to the collection
@@ -169,6 +209,9 @@ app.get('/santorini', function(req, res) {
       res.render('santorini' , {message: false});
     }
   });
+  }
+  else
+    res.render('login' , {message: "Please login first"})
 });
 
 
@@ -192,7 +235,6 @@ app.post('/login', function(req, res) {
       res.render('login', {message: "Wrong Credentials"});
     }
   });
-  
 });
 
 // registration
@@ -213,18 +255,16 @@ app.post('/register', function(req, res) {
     {
       db.collection('Users').insertOne({username : username, password : password , wanttogo : wanttogo}), function(err, result) {
       }
-      req.session.username = username;
-      res.render('home');
+      res.render('login' , {message: "Succesfully registered"});
     }
   });
-  
 });
 
 // want to go
 
 app.post('/wanttogolist', function(req, res) {
+  if(req.session.username) {
   var username = req.session.username;
-  console.log(username);
   var place = req.body.place;
   var collection = db.collection('Users');  // get reference to the collection
 
@@ -234,9 +274,31 @@ app.post('/wanttogolist', function(req, res) {
      }
  });
   res.render('home');
+  }
+  else
+    res.render('login' , {message: "Please login first"})
 });
   
 
+// search results
+app.post('/search', function(req, res) {
+  if(req.session.username) {
+  var word = req.body.Search;
+  var array = ['Paris', 'Rome', 'Bali', 'Santorini', 'Inca', 'Annapurna'];
+  var result = [];
+  for(var i = 0; i < array.length; i++) {
+    if(array[i].toLowerCase().includes(word.toLowerCase())) {
+      result.push(array[i]);
+    }
+  }
+  res.render('searchresults' , {result: result});
+  }
+  else
+    res.render('login' , {message: "Please login first"})
+});
+
+
+// Preventing a user from accessing any page except login and registration without logging in first 
 
 
 app.listen(3000); 

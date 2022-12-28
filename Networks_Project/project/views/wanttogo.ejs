@@ -38,5 +38,21 @@
             </form>
         </div>
     </nav>
+    <div class="container">
+        <h1>Want-to-Go List</h1>
+        <table class="table table-striped table-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(var i = 0; i < locals.places.length; i++){ %>
+                <tr>
+                    <td><%= locals.places[i] %></td>
+                </tr>
+                <% } %>
+            </tbody>
+        </table>
 </body>
 </html>
