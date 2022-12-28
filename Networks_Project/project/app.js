@@ -6,6 +6,8 @@ var fs = require('fs');
 var app = express();
 var session = require('express-session');
 
+const PORT = process.env.PORT || 3000
+
 
 
 // view engine setup
@@ -301,4 +303,6 @@ app.post('/search', function(req, res) {
 // Preventing a user from accessing any page except login and registration without logging in first 
 
 
-app.listen(3000); 
+app.listen(PORT, () => {
+  console.log(`Server listening on ${PORT}`);
+}); 
