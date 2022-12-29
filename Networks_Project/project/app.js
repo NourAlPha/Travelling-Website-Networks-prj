@@ -32,11 +32,27 @@ MongoClient.connect("mongodb://0.0.0.0:27017", { useNewUrlParser: true }, functi
 // login page
 
 app.get('/', function(req, res) {
-  res.render('login')
+  if(req.session.username)
+    res.render('home')
+  else
+    res.render('login')
 });
 
+app.get('/logout', function(req, res){
+  req.session.destroy(function(err) {
+    if(err) {
+      console.log(err);
+    } else {
+      res.redirect('/');
+    }
+  });
+})
+
 app.get('/registration', function(req, res) {
-  res.render('registration')
+  if(req.session.username)
+    res.render('home')
+  else
+    res.render('registration')
 });
 
 app.get('/home', function(req, res) {

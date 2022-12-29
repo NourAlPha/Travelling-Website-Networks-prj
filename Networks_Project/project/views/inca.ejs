@@ -83,8 +83,13 @@
             placeholder="Search"
             aria-label="Search"
           />
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          <button class="btn btn-outline-success my-2 my-sm-0 mr-sm-2" type="submit">
             Search
+          </button>
+        </form>
+        <form method="GET" action="/logout" class="form-inline my-2 my-lg-0">
+          <button class="btn btn-outline-success my-2 my-sm-0">
+            Logout
           </button>
         </form>
       </div>
@@ -100,7 +105,7 @@
     </div>
     <div class="wanttogo">
       <form method="POST" action="/wanttogolist">
-        <input type="hidden" name="place" value="Inca Trail" />
+        <input type="hidden" name="place" value="Inca" />
         <% if(locals.message){ %>
         <button id="wanttogo" class="btn btn-secondary ml-3" disabled>
           Add to Want-to-Go List
